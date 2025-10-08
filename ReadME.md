@@ -2,6 +2,9 @@
 
 A beautiful, responsive mini e-learning platform built with HTML, CSS, and JavaScript. This single-page application allows users to browse courses, view detailed information, and track their learning progress.
 
+PUBLISHED URL: https://claude.ai/public/artifacts/412cf5d8-0865-4680-9109-36c4cf18baf6
+
+
 ![Platform Preview](https://img.shields.io/badge/Status-Ready-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
 
 ## 🌟 Features
