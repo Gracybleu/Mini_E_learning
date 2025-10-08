@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLearn - Mini E-Learning Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Login Page Styles */
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .login-card h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .login-card p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            position: relative;
+        }
+
+        .course-completed-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .course-card.completed .course-completed-badge {
+            display: block;
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .course-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .course-duration {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f44336;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .modal-header .course-meta {
+            margin-top: 10px;
+        }
+
+        .modal-body {
+            margin-bottom: 30px;
+        }
+
+        .modal-body h3 {
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .modal-body ul {
+            padding-left: 20px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .complete-btn {
+            flex: 1;
+            padding: 14px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .complete-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .complete-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .login-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-card">
+            <h1>EduLearn</h1>
+            <p>Welcome back! Sign in to continue your learning journey.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="container">
+            <div class="header">
+                <h1>📚 My Learning Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="welcomeText">Welcome back!</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3 style="color: #333; margin-bottom: 10px;">Your Progress</h3>
+                <p style="color: #666;">You've completed <span id="completedCount">0</span> out of 3 courses</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="courses-grid" id="coursesGrid"></div>
+        </div>
+    </div>
+
+    <!-- Course Detail Modal -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <div class="course-meta">
+                    <span id="modalDuration"></span>
+                    <span id="modalLevel"></span>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="complete-btn" id="completeBtn" onclick="toggleComplete()">
+                    Mark as Complete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Course data
+        const courses = [
+            {
+                id: 1,
+                title: "Introduction to Web Development",
+                description: "Learn the fundamentals of HTML, CSS, and JavaScript to build modern websites.",
+                duration: "8 weeks",
+                level: "Beginner",
+                icon: "🌐",
+                completed: false,
+                details: {
+                    overview: "This comprehensive course covers everything you need to start building websites from scratch. You'll learn HTML for structure, CSS for styling, and JavaScript for interactivity.",
+                    topics: [
+                        "HTML5 semantics and structure",
+                        "CSS3 styling and layouts",
+                        "JavaScript basics and DOM manipulation",
+                        "Responsive web design",
+                        "Web accessibility best practices"
+                    ],
+                    requirements: "No prior experience required. Just bring your enthusiasm to learn!"
+                }
+            },
+            {
+                id: 2,
+                title: "Python Programming Masterclass",
+                description: "Master Python programming from basics to advanced concepts with hands-on projects.",
+                duration: "10 weeks",
+                level: "Intermediate",
+                icon: "🐍",
+                completed: false,
+                details: {
+                    overview: "Dive deep into Python programming and learn how to build real-world applications. From data structures to object-oriented programming, this course covers it all.",
+                    topics: [
+                        "Python syntax and fundamentals",
+                        "Data structures and algorithms",
+                        "Object-oriented programming",
+                        "File handling and modules",
+                        "Building practical projects"
+                    ],
+                    requirements: "Basic programming knowledge recommended but not required."
+                }
+            },
+            {
+                id: 3,
+                title: "Digital Marketing Essentials",
+                description: "Discover effective strategies for SEO, social media, and content marketing.",
+                duration: "6 weeks",
+                level: "Beginner",
+                icon: "📱",
+                completed: false,
+                details: {
+                    overview: "Learn how to create and execute successful digital marketing campaigns. This course covers all major digital marketing channels and strategies.",
+                    topics: [
+                        "Search Engine Optimization (SEO)",
+                        "Social media marketing strategies",
+                        "Content marketing and creation",
+                        "Email marketing campaigns",
+                        "Analytics and performance tracking"
+                    ],
+                    requirements: "No prior marketing experience needed. Perfect for beginners!"
+                }
+            }
+        ];
+
+        let currentUser = null;
+        let currentCourse = null;
+
+        // Load state from memory
+        function loadState() {
+            const savedUser = sessionStorage.getItem('currentUser');
+            const savedCourses = sessionStorage.getItem('courses');
+            
+            if (savedUser) {
+                currentUser = savedUser;
+            }
+            
+            if (savedCourses) {
+                const parsedCourses = JSON.parse(savedCourses);
+                parsedCourses.forEach((saved, index) => {
+                    courses[index].completed = saved.completed;
+                });
+            }
+        }
+
+        // Save state to memory
+        function saveState() {
+            if (currentUser) {
+                sessionStorage.setItem('currentUser', currentUser);
+            }
+            sessionStorage.setItem('courses', JSON.stringify(courses));
+        }
+
+        // Initialize
+        loadState();
+        
+        if (currentUser) {
+            showDashboard();
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            currentUser = username;
+            saveState();
+            showDashboard();
+        });
+
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            document.getElementById('welcomeText').textContent = `Welcome, ${currentUser}!`;
+            document.getElementById('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
+            renderCourses();
+            updateProgress();
+        }
+
+        function logout() {
+            currentUser = null;
+            sessionStorage.removeItem('currentUser');
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+        }
+
+        function renderCourses() {
+            const grid = document.getElementById('coursesGrid');
+            grid.innerHTML = courses.map(course => `
+                <div class="course-card ${course.completed ? 'completed' : ''}" onclick="openModal(${course.id})">
+                    <div class="course-image">
+                        ${course.icon}
+                        <div class="course-completed-badge">✓ Completed</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-title">${course.title}</div>
+                        <div class="course-description">${course.description}</div>
+                        <div class="course-meta">
+                            <div class="course-duration">
+                                <span>⏱️</span>
+                                <span>${course.duration}</span>
+                            </div>
+                            <span>${course.level}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(courseId) {
+            currentCourse = courses.find(c => c.id === courseId);
+            const modal = document.getElementById('courseModal');
+            
+            document.getElementById('modalTitle').textContent = currentCourse.title;
+            document.getElementById('modalDuration').innerHTML = `⏱️ ${currentCourse.duration}`;
+            document.getElementById('modalLevel').textContent = currentCourse.level;
+            
+            document.getElementById('modalBody').innerHTML = `
+                <p style="color: #666; line-height: 1.8;">${currentCourse.details.overview}</p>
+                <h3>What You'll Learn</h3>
+                <ul>
+                    ${currentCourse.details.topics.map(topic => `<li>${topic}</li>`).join('')}
+                </ul>
+                <h3>Requirements</h3>
+                <p style="color: #666; line-height: 1.8;">${currentCourse.details.requirements}</p>
+            `;
+            
+            const completeBtn = document.getElementById('completeBtn');
+            if (currentCourse.completed) {
+                completeBtn.textContent = '✓ Completed';
+                completeBtn.disabled = true;
+            } else {
+                completeBtn.textContent = 'Mark as Complete';
+                completeBtn.disabled = false;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('courseModal').classList.remove('active');
+            currentCourse = null;
+        }
+
+        function toggleComplete() {
+            if (currentCourse && !currentCourse.completed) {
+                currentCourse.completed = true;
+                saveState();
+                document.getElementById('completeBtn').textContent = '✓ Completed';
+                document.getElementById('completeBtn').disabled = true;
+                renderCourses();
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const completed = courses.filter(c => c.completed).length;
+            const percentage = (completed / courses.length) * 100;
+            
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('courseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
